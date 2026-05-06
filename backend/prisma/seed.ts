@@ -9,6 +9,14 @@ const BCRYPT_COST = 12;
 async function main(): Promise<void> {
   console.log('🌱 Starting seed...');
 
+  // Upgrade any existing JUNIOR_MEMBER users who registered via the app to ADMIN
+  // This handles the case where someone registered before seed ran
+  await prisma.user.updateMany({
+    where: { role: Role.JUNIOR_MEMBER, email: { not: { endsWith: '@tms.dev' } } },
+    data: { role: Role.ADMIN },
+  });
+  console.log('✅ Upgraded existing registered users to ADMIN');
+
   const passwordHash = await bcrypt.hash(SEED_PASSWORD, BCRYPT_COST);
 
   // ─── Step 1: Admin ────────────────────────────────────────────────────────
