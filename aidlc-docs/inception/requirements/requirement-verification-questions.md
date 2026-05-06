@@ -16,7 +16,7 @@ C) Other cloud provider (GCP, Azure, DigitalOcean, etc.)
 D) Docker / self-hosted VPS
 E) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: E Vercel
 
 ---
 
@@ -27,7 +27,7 @@ A) Local filesystem (`/uploads` folder) — simpler, no cloud setup needed
 B) AWS S3 — production-grade, requires AWS credentials
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -40,7 +40,7 @@ A) Yes — use access token (15 min) + refresh token (7 days) with rotation
 B) No — use a single long-lived JWT token (simpler, less secure)
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -51,7 +51,7 @@ A) Yes — send verification email before account activation
 B) No — accounts are active immediately after registration
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
 
 ---
 
@@ -62,7 +62,7 @@ A) Admin only — Admin creates all accounts (no self-registration)
 B) Anyone can self-register, then Admin assigns roles
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
 
 ---
 
@@ -75,7 +75,7 @@ A) Yes — users can edit and delete their own messages
 B) No — messages are immutable once sent
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -86,7 +86,7 @@ A) Yes — show read receipts per message
 B) No — only show unread badge counts
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -97,7 +97,7 @@ A) Text + file chat only (as specified)
 B) Add basic video/audio call capability
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
 
 ---
 
@@ -110,7 +110,7 @@ A) Yes — stream the response for a better UX (progressive rendering)
 B) No — wait for the full response then display it
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -122,7 +122,7 @@ B) PDF, DOCX, TXT, and images (PNG, JPG)
 C) All of the above plus additional formats (CSV, XLSX, PPTX)
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: C
 
 ---
 
@@ -133,7 +133,7 @@ A) Real DOCX generation using the `docx` npm package (proper formatting, styles)
 B) Simple HTML download (browser prints to file, less fidelity)
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -146,7 +146,7 @@ A) Yes — each task has a comment thread
 B) No — tasks are standalone (no comments)
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -157,7 +157,7 @@ A) Yes — users can log time against tasks
 B) No — no time tracking needed
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -168,7 +168,7 @@ A) Yes — include charts using Recharts as specified
 B) No — keep dashboard simple without charts
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -181,7 +181,7 @@ A) Yes — real-time collaborative editing via Socket.io
 B) No — single-user editing with share/view permissions only (as specified)
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
 
 ---
 
@@ -193,7 +193,7 @@ B) Quill.js (mature, widely used)
 C) Simple textarea (no rich text, plain text only)
 D) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -206,7 +206,7 @@ A) Yes — enforce strict role-hierarchy validation on drag-and-drop
 B) No — allow free restructuring, Admin is trusted
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
 
 ---
 
@@ -219,7 +219,7 @@ A) Yes — store notifications in DB with read/unread status
 B) No — in-memory only (notifications disappear on page refresh)
 C) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: B
 
 ---
 
@@ -232,7 +232,7 @@ A) Yes — enforce all SECURITY rules as blocking constraints (recommended for p
 B) No — skip all SECURITY rules (suitable for PoCs, prototypes, and experimental projects)
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
@@ -244,7 +244,7 @@ B) Partial — enforce PBT rules only for pure functions and serialization round
 C) No — skip all PBT rules (suitable for simple CRUD applications or thin integration layers)
 X) Other (please describe after [Answer]: tag below)
 
-[Answer]: 
+[Answer]: A
 
 ---
 
