@@ -4,6 +4,7 @@
     "lib": ["ES2022"],
     "module": "CommonJS",
     "moduleResolution": "node",
+    "rootDir": "./src",
     "outDir": "./dist",
     "strict": true,
     "noImplicitAny": true,
@@ -28,8 +29,7 @@
     }
   },
   "include": [
-    "src/**/*",
-    "../shared/src/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
