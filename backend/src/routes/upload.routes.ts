@@ -8,7 +8,9 @@ const router = Router();
 
 const uploadFile: RequestHandler = (req, res) => {
   if (!req.file) { res.status(400).json({ error: 'No file uploaded' }); return; }
-  const url = `${process.env['VITE_API_URL'] ?? `http://localhost:${env.PORT}`}/uploads/${path.basename(req.file.path)}`;
+  // Use PUBLIC_URL in production, fallback to local for dev
+  const baseUrl = env.PUBLIC_URL || `http://localhost:${env.PORT}`;
+  const url = `${baseUrl}/uploads/${path.basename(req.file.path)}`;
   res.json({ data: { url } });
 };
 

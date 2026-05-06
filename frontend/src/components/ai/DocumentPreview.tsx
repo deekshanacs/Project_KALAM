@@ -18,7 +18,8 @@ export function DocumentPreview({ content, isStreaming, isDone, answers }: Docum
     if (!content || !answers) return;
     try {
       const token = getAccessToken();
-      const res = await fetch(`${import.meta.env['VITE_API_URL'] as string ?? ''}/api/ai/generate-docx`, {
+      const apiBase = (import.meta.env['VITE_API_URL'] as string | undefined) ?? '';
+      const res = await fetch(`${apiBase}/api/ai/generate-docx`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?? ''}` },
         body: JSON.stringify({ content, options: { font: answers.font, fontSize: Number(answers.fontSize), pageSize: answers.pageSize } }),

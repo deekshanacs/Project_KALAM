@@ -23,15 +23,7 @@ export function createApp(): express.Application {
   // Security headers
   app.use(
     helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: ["'self'"],
-          styleSrc: ["'self'", "'unsafe-inline'"],
-          imgSrc: ["'self'", 'data:', 'blob:'],
-          connectSrc: ["'self'", 'wss:', 'ws:'],
-        },
-      },
+      contentSecurityPolicy: false, // CSP handled by frontend meta tag; backend serves API only
       hsts: { maxAge: 31536000, includeSubDomains: true },
     })
   );

@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
   resolve: {
     alias: {
@@ -18,7 +18,8 @@ export default defineConfig({
       '@tiptap/extension-placeholder',
     ],
   },
-  server: {
+  // Proxy only in local development — never in production build
+  server: mode === 'development' ? {
     port: 5173,
     proxy: {
       '/api': {
@@ -30,5 +31,5 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-  },
-});
+  } : undefined,
+}));

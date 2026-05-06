@@ -29,9 +29,10 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     const token = getAccessToken();
     if (!token) return;
 
-    const socket = io(import.meta.env['VITE_SOCKET_URL'] as string ?? 'http://localhost:4000', {
+    const socket = io(import.meta.env['VITE_SOCKET_URL'] as string ?? '', {
       auth: { token },
       transports: ['websocket', 'polling'],
+      path: '/socket.io',
     });
 
     socket.on('connect', () => setIsConnected(true));

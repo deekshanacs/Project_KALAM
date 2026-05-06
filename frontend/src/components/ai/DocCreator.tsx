@@ -24,7 +24,9 @@ export function DocCreator() {
 
     try {
       const token = getAccessToken();
-      const res = await fetch(`${import.meta.env['VITE_API_URL'] as string ?? ''}/api/ai/create-document`, {
+      // Use VITE_API_URL in prod; empty string lets Vite proxy handle it in dev
+      const apiBase = (import.meta.env['VITE_API_URL'] as string | undefined) ?? '';
+      const res = await fetch(`${apiBase}/api/ai/create-document`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?? ''}` },
         body: JSON.stringify({ description, answers: ans }),

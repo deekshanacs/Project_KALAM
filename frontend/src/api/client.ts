@@ -11,8 +11,12 @@ export function getAccessToken(): string | null {
   return accessToken;
 }
 
+// In production: VITE_API_URL = https://project-kalam-backend.onrender.com
+// In dev: VITE_API_URL is empty → Vite proxy handles /api/* → localhost:4000
+const API_BASE = (import.meta.env['VITE_API_URL'] as string | undefined) ?? '';
+
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: import.meta.env['VITE_API_URL'] as string ?? 'http://localhost:4000',
+  baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });
@@ -29,7 +33,10 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: unknown) => {
-    const axiosError = error as { response?: { status: number }; config?: InternalAxiosRequestConfig & { _retry?: boolean } };
+    const axiosError = error as {
+      response?: { status: number };
+      config?: InternalAxiosRequestConfig & { _retry?: boolean };
+    };
     const originalRequest = axiosError.config;
 
     if (axiosError.response?.status === 401 && originalRequest && !originalRequest._retry) {
@@ -42,7 +49,7 @@ apiClient.interceptors.response.use(
 
           refreshPromise = axios
             .post<{ data: { accessToken: string; refreshToken: string } }>(
-              `${import.meta.env['VITE_API_URL'] as string ?? 'http://localhost:4000'}/api/auth/refresh`,
+              `${API_BASE}/api/auth/refresh`,
               { refreshToken: storedRefreshToken }
             )
             .then((res) => {
