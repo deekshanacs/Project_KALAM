@@ -1,0 +1,262 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  TEAM_LEADER
+  TEAM_MEMBER
+  JUNIOR_MEMBER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  IN_CALL
+  AWAY
+  OFFLINE
+}
+
+enum MessageType {
+  TEXT
+  FILE
+  IMAGE
+  LINK
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  ARCHIVED
+}
+
+// ─── Models ───────────────────────────────────────────────────────────────────
+
+model User {
+  id                 String             @id @default(cuid())
+  email              String             @unique
+  name               String
+  password           String
+  role               Role               @default(JUNIOR_MEMBER)
+  availabilityStatus AvailabilityStatus @default(OFFLINE)
+  avatarUrl          String?
+
+  // Org hierarchy self-relation
+  supervisorId  String?
+  supervisor    User?  @relation("UserHierarchy", fields: [supervisorId], references: [id])
+  subordinates  User[] @relation("UserHierarchy")
+
+  // Task relations
+  tasksAssigned Task[] @relation("TaskAssignedBy")
+  tasksReceived Task[] @relation("TaskAssignedTo")
+
+  // Message relations
+  messagesSent     Message[] @relation("MessageSender")
+  messagesReceived Message[] @relation("MessageReceiver")
+
+  // Group relations
+  groupsCreated    Group[]       @relation("GroupCreator")
+  groupMemberships GroupMember[]
+
+  // Document relations
+  documentsOwned Document[] @relation("DocumentOwner")
+
+  // Project relations
+  projectsOwned Project[] @relation("ProjectOwner")
+
+  // Auth relations
+  refreshTokens RefreshToken[]
+
+  // Comment & TimeLog relations
+  comments Comment[]
+  timeLogs TimeLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  priority    Priority   @default(MEDIUM)
+  dueDate     DateTime?
+  completedAt DateTime?
+  attachments Json       @default("[]")
+
+  assignedById String
+  assignedToId String
+  projectId    String?
+
+  assignedBy User     @relation("TaskAssignedBy", fields: [assignedById], references: [id])
+  assignedTo User     @relation("TaskAssignedTo", fields: [assignedToId], references: [id])
+  project    Project? @relation(fields: [projectId], references: [id])
+
+  comments Comment[]
+  timeLogs TimeLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tasks")
+}
+
+model Message {
+  id          String      @id @default(cuid())
+  content     String?
+  type        MessageType @default(TEXT)
+  attachments Json        @default("[]")
+  readBy      Json        @default("[]")
+  reactions   Json        @default("[]")
+  replyToId   String?
+  editedAt    DateTime?
+  deletedAt   DateTime?
+
+  senderId   String
+  receiverId String?
+  groupId    String?
+
+  sender   User   @relation("MessageSender", fields: [senderId], references: [id])
+  receiver User?  @relation("MessageReceiver", fields: [receiverId], references: [id])
+  group    Group? @relation(fields: [groupId], references: [id])
+
+  replyTo   Message?  @relation("MessageReplies", fields: [replyToId], references: [id])
+  replies   Message[] @relation("MessageReplies")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("messages")
+}
+
+model Group {
+  id          String @id @default(cuid())
+  name        String
+  createdById String
+
+  createdBy User          @relation("GroupCreator", fields: [createdById], references: [id])
+  members   GroupMember[]
+  messages  Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("groups")
+}
+
+model GroupMember {
+  id      String @id @default(cuid())
+  groupId String
+  userId  String
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  joinedAt DateTime @default(now())
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
+model Document {
+  id         String @id @default(cuid())
+  title      String
+  content    Json   @default("{}")
+  font       String @default("Inter")
+  fontSize   Int    @default(12)
+  theme      String @default("light")
+  pageSize   String @default("A4")
+  sharedWith Json   @default("[]")
+
+  ownerId String
+  owner   User   @relation("DocumentOwner", fields: [ownerId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("documents")
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(ACTIVE)
+  ownerId     String
+
+  owner User   @relation("ProjectOwner", fields: [ownerId], references: [id])
+  tasks Task[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("projects")
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  tokenHash String    @unique
+  userId    String
+  expiresAt DateTime
+  revokedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("refresh_tokens")
+}
+
+model Comment {
+  id       String @id @default(cuid())
+  content  String
+  taskId   String
+  authorId String
+
+  task   Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comments")
+}
+
+model TimeLog {
+  id     String  @id @default(cuid())
+  hours  Float
+  note   String?
+  taskId String
+  userId String
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("time_logs")
+}
