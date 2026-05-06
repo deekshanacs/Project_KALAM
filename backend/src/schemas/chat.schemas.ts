@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MessageType } from '@tms/shared';
+import { MessageType } from '../_shared';
 
 export const SendDirectMessageSchema = z.object({
   receiverId: z.string().min(1),

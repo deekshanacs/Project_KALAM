@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { prisma } from '../lib/prisma';
 import { emitToUser, emitToGroup } from '../services/socket.service';
 import { ForbiddenError, NotFoundError } from '../lib/errors';
-import type { MessageReaction } from '@tms/shared';
+import type { MessageReaction } from '../_shared';
 import { upload } from '../middleware/upload';
 import path from 'path';
 import { env } from '../config/env';
@@ -27,7 +27,7 @@ const messageInclude = {
   },
 } as const;
 
-// ─── GET /messages/direct/:userId ─────────────────────────────────────────────
+// --- GET /messages/direct/:userId ---------------------------------------------
 const getDirectMessages: RequestHandler = async (req, res, next) => {
   try {
     const { userId } = req.params as { userId: string };
@@ -46,7 +46,7 @@ const getDirectMessages: RequestHandler = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-// ─── POST /messages/direct ────────────────────────────────────────────────────
+// --- POST /messages/direct ----------------------------------------------------
 const sendDirectMessage: RequestHandler = async (req, res, next) => {
   try {
     const { receiverId, content, type, attachments, replyToId } = req.body as {
@@ -79,7 +79,7 @@ const sendDirectMessage: RequestHandler = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-// ─── GET /messages/group/:groupId ─────────────────────────────────────────────
+// --- GET /messages/group/:groupId ---------------------------------------------
 const getGroupMessages: RequestHandler = async (req, res, next) => {
   try {
     const { groupId } = req.params as { groupId: string };
@@ -93,7 +93,7 @@ const getGroupMessages: RequestHandler = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-// ─── POST /messages/group ─────────────────────────────────────────────────────
+// --- POST /messages/group -----------------------------------------------------
 const sendGroupMessage: RequestHandler = async (req, res, next) => {
   try {
     const { groupId, content, type, attachments, replyToId } = req.body as {
@@ -118,7 +118,7 @@ const sendGroupMessage: RequestHandler = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-// ─── PATCH /messages/:id (edit) ───────────────────────────────────────────────
+// --- PATCH /messages/:id (edit) -----------------------------------------------
 const editMessage: RequestHandler = async (req, res, next) => {
   try {
     const msg = await prisma.message.findUnique({ where: { id: req.params['id']! } });
@@ -137,7 +137,7 @@ const editMessage: RequestHandler = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-// ─── DELETE /messages/:id ─────────────────────────────────────────────────────
+// --- DELETE /messages/:id -----------------------------------------------------
 const deleteMessage: RequestHandler = async (req, res, next) => {
   try {
     const msg = await prisma.message.findUnique({ where: { id: req.params['id']! } });
@@ -155,7 +155,7 @@ const deleteMessage: RequestHandler = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-// ─── POST /messages/:id/read ──────────────────────────────────────────────────
+// --- POST /messages/:id/read --------------------------------------------------
 const markAsRead: RequestHandler = async (req, res, next) => {
   try {
     const msg = await prisma.message.findUnique({ where: { id: req.params['id']! } });
@@ -176,7 +176,7 @@ const markAsRead: RequestHandler = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-// ─── POST /messages/:id/react ─────────────────────────────────────────────────
+// --- POST /messages/:id/react -------------------------------------------------
 const ReactSchema = z.object({ emoji: z.string().min(1).max(10) });
 
 const reactToMessage: RequestHandler = async (req, res, next) => {
@@ -220,7 +220,7 @@ const reactToMessage: RequestHandler = async (req, res, next) => {
   } catch (err) { next(err); }
 };
 
-// ─── POST /messages/upload ────────────────────────────────────────────────────
+// --- POST /messages/upload ----------------------------------------------------
 const uploadChatFile: RequestHandler = (req, res, _next) => {
   if (!req.file) { res.status(400).json({ error: 'No file' }); return; }
   const baseUrl = env.PUBLIC_URL;

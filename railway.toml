@@ -1,0 +1,10 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm install --include=dev && npm run db:generate && npm run build --workspace=shared && npm run build --workspace=backend"
+
+[deploy]
+startCommand = "npm run start --workspace=backend"
+healthcheckPath = "/health"
+healthcheckTimeout = 60
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3

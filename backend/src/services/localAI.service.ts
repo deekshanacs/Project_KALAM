@@ -1,11 +1,11 @@
 /**
- * Local AI Service — rule-based NLP document analysis and generation.
+ * Local AI Service - rule-based NLP document analysis and generation.
  * No external API required. Works entirely server-side.
  */
 
-import type { AISummaryDto, CreateDocumentAnswers } from '@tms/shared';
+import type { AISummaryDto, CreateDocumentAnswers } from '../_shared';
 
-// ─── NLP utilities ────────────────────────────────────────────────────────────
+// --- NLP utilities ------------------------------------------------------------
 
 const STOP_WORDS = new Set([
   'the','and','for','are','but','not','you','all','can','had','her','was','one',
@@ -49,7 +49,7 @@ function scoreSentence(s: string, keywords: string[], pos: number, total: number
   return score;
 }
 
-// ─── Summarize ────────────────────────────────────────────────────────────────
+// --- Summarize ----------------------------------------------------------------
 
 export function summarizeText(content: string): AISummaryDto {
   const clean = content.replace(/\s+/g, ' ').trim();
@@ -88,7 +88,7 @@ export function summarizeText(content: string): AISummaryDto {
   return { summary, keyPoints: keyPoints.length > 0 ? keyPoints : keywords.slice(0, 5).map((k) => `Key topic: ${k}`), analysis };
 }
 
-// ─── Document generation ──────────────────────────────────────────────────────
+// --- Document generation ------------------------------------------------------
 
 const SECTION_TEMPLATES: Record<string, string[]> = {
   Report:   ['Executive Summary', 'Introduction', 'Background', 'Findings', 'Analysis', 'Recommendations', 'Conclusion'],

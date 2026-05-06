@@ -1,4 +1,4 @@
-import { Role, TaskStatus } from '@tms/shared';
+import { Role, TaskStatus } from '../_shared';
 import { prisma } from '../lib/prisma';
 import { ForbiddenError, NotFoundError } from '../lib/errors';
 import { canAssign } from './user.service';

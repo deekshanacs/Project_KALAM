@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TaskStatus, Priority } from '@tms/shared';
+import { TaskStatus, Priority } from '../_shared';
 
 export const CreateTaskSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200),

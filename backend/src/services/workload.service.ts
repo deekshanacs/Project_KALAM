@@ -1,4 +1,4 @@
-import { Role, WorkloadDto, MAX_CAPACITY, OPEN_STATUSES } from '@tms/shared';
+import { Role, WorkloadDto, MAX_CAPACITY, OPEN_STATUSES } from '../_shared';
 import { prisma } from '../lib/prisma';
 
 export async function calculateWorkload(userId: string): Promise<WorkloadDto> {

@@ -1,4 +1,4 @@
-import { Role } from '@tms/shared';
+import { Role } from '../_shared';
 import { prisma } from '../lib/prisma';
 import { ForbiddenError, NotFoundError } from '../lib/errors';
 

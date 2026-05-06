@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import bcrypt from 'bcrypt';
-import { Role } from '@tms/shared';
+import { Role } from '../_shared';
 import { prisma } from '../lib/prisma';
 import {
   generateTokenPair,

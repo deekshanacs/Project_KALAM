@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { Role } from '@tms/shared';
+import { Role } from '../_shared';
 import { ForbiddenError, UnauthorizedError } from '../lib/errors';
 
 export function roleGuard(allowedRoles: Role[]): RequestHandler {

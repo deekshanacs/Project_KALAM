@@ -5,7 +5,7 @@ import { CreateDocumentSchema, UpdateDocumentSchema, ShareDocumentSchema } from 
 import { prisma } from '../lib/prisma';
 import { ForbiddenError, NotFoundError } from '../lib/errors';
 import { emitToUser } from '../services/socket.service';
-import type { DocumentShare } from '@tms/shared';
+import type { DocumentShare } from '../_shared';
 
 const router = Router();
 

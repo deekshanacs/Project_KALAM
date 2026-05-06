@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AvailabilityStatus } from '@tms/shared';
+import { AvailabilityStatus } from '../_shared';
 
 export const UpdateStatusSchema = z.object({
   availabilityStatus: z.nativeEnum(AvailabilityStatus),

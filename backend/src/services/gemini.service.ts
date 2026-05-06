@@ -8,10 +8,10 @@ import { GoogleGenerativeAI, type GenerativeModel } from '@google/generative-ai'
 import { env } from '../config/env';
 import { logger } from '../lib/logger';
 import { AppError } from '../lib/errors';
-import type { AISummaryDto, CreateDocumentAnswers } from '@tms/shared';
+import type { AISummaryDto, CreateDocumentAnswers } from '../_shared';
 import { summarizeText, generateDocumentSync } from './localAI.service';
 
-// ─── Model initialization ─────────────────────────────────────────────────────
+// --- Model initialization -----------------------------------------------------
 
 let model: GenerativeModel | null = null;
 
@@ -34,10 +34,10 @@ function getModel(): GenerativeModel {
 
 const hasGemini = () => Boolean(env.GEMINI_API_KEY);
 
-// ─── Summarize ────────────────────────────────────────────────────────────────
+// --- Summarize ----------------------------------------------------------------
 
 const SUMMARIZE_PROMPT = (content: string) => `You are a professional document analyst.
-Analyze the following document and respond with ONLY a valid JSON object — no markdown, no code blocks, just raw JSON.
+Analyze the following document and respond with ONLY a valid JSON object � no markdown, no code blocks, just raw JSON.
 
 The JSON must have exactly this structure:
 {
@@ -60,7 +60,7 @@ export async function summarizeDocument(content: string, isImage = false): Promi
   }
 
   if (!hasGemini()) {
-    logger.warn({ event: 'GEMINI_FALLBACK', reason: 'No API key — using local NLP' });
+    logger.warn({ event: 'GEMINI_FALLBACK', reason: 'No API key � using local NLP' });
     return summarizeText(content);
   }
 
@@ -85,12 +85,12 @@ export async function summarizeDocument(content: string, isImage = false): Promi
   } catch (error: unknown) {
     logger.error({ event: 'GEMINI_SUMMARIZE_ERROR', error: error instanceof Error ? error.message : String(error) });
     // Fallback to local NLP
-    logger.info({ event: 'GEMINI_FALLBACK', reason: 'API error — using local NLP' });
+    logger.info({ event: 'GEMINI_FALLBACK', reason: 'API error � using local NLP' });
     return summarizeText(content);
   }
 }
 
-// ─── Document creation (streaming) ───────────────────────────────────────────
+// --- Document creation (streaming) -------------------------------------------
 
 function buildDocumentPrompt(description: string, answers: CreateDocumentAnswers): string {
   const tocLine = answers.toc ? 'Include a Table of Contents after the title.' : 'Do not include a Table of Contents.';
@@ -118,7 +118,7 @@ Instructions:
 4. Include relevant bullet points where appropriate
 5. Make the content specific and relevant to: "${description}"
 6. Maintain a ${answers.tone.toLowerCase()} tone throughout
-7. Start directly with the document — no preamble or meta-commentary
+7. Start directly with the document � no preamble or meta-commentary
 
 Write the complete document now:`;
 }
@@ -132,7 +132,7 @@ export async function generateDocumentFull(
   answers: CreateDocumentAnswers
 ): Promise<string> {
   if (!hasGemini()) {
-    logger.warn({ event: 'GEMINI_FALLBACK', reason: 'No API key — using local generation' });
+    logger.warn({ event: 'GEMINI_FALLBACK', reason: 'No API key � using local generation' });
     return generateDocumentSync(description, answers);
   }
 
@@ -146,13 +146,13 @@ export async function generateDocumentFull(
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     logger.error({ event: 'GEMINI_GENERATE_ERROR', error: msg, stack: error instanceof Error ? error.stack?.slice(0, 300) : undefined });
-    logger.info({ event: 'GEMINI_FALLBACK', reason: 'API error — using local generation' });
+    logger.info({ event: 'GEMINI_FALLBACK', reason: 'API error � using local generation' });
     return generateDocumentSync(description, answers);
   }
 }
 
 /**
- * @deprecated Use generateDocumentFull instead — kept for compatibility
+ * @deprecated Use generateDocumentFull instead � kept for compatibility
  */
 export async function* streamDocument(
   description: string,

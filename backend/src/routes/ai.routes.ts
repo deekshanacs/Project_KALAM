@@ -7,11 +7,11 @@ import { parseFile } from '../services/fileParser.service';
 import { generate as generateDocx } from '../services/docxGenerator.service';
 import { summarizeDocument, generateDocumentFull } from '../services/gemini.service';
 import { logger } from '../lib/logger';
-import type { CreateDocumentRequestDto } from '@tms/shared';
+import type { CreateDocumentRequestDto } from '../_shared';
 
 const router = Router();
 
-// ─── POST /api/ai/summarize ───────────────────────────────────────────────────
+// --- POST /api/ai/summarize ---------------------------------------------------
 const summarizeHandler: RequestHandler = async (req, res, next) => {
   if (!req.file) { res.status(400).json({ error: 'No file uploaded' }); return; }
   try {
@@ -26,9 +26,9 @@ const summarizeHandler: RequestHandler = async (req, res, next) => {
   }
 };
 
-// ─── POST /api/ai/create-document (SSE streaming) ────────────────────────────
+// --- POST /api/ai/create-document (SSE streaming) ----------------------------
 // Generates the full document via Gemini, then streams it word-by-word
-// using setTimeout batching — this avoids async generator / SSE flush issues.
+// using setTimeout batching � this avoids async generator / SSE flush issues.
 const createDocumentHandler: RequestHandler = async (req, res) => {
   const { description, answers } = req.body as CreateDocumentRequestDto;
 
@@ -77,7 +77,7 @@ const createDocumentHandler: RequestHandler = async (req, res) => {
   }
 };
 
-// ─── POST /api/ai/generate-docx ───────────────────────────────────────────────
+// --- POST /api/ai/generate-docx -----------------------------------------------
 const generateDocxHandler: RequestHandler = async (req, res, next) => {
   try {
     const { content, options } = req.body as { content: string; options: Record<string, unknown> };

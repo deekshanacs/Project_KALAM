@@ -1,4 +1,4 @@
-import { Role } from '@tms/shared';
+import { Role } from '../_shared';
 
 declare global {
   namespace Express {

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { createHash, randomUUID } from 'crypto';
-import { Role } from '@tms/shared';
+import { Role } from '../_shared';
 import { env } from '../config/env';
 import { prisma } from '../lib/prisma';
 import { UnauthorizedError } from '../lib/errors';

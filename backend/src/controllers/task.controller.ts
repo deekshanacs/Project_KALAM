@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import * as taskService from '../services/task.service';
 import type { CreateTaskDto } from '../schemas/task.schemas';
-import { TaskStatus } from '@tms/shared';
+import { TaskStatus } from '../_shared';
 
 export const listTasks: RequestHandler = async (req, res, next) => {
   try {
