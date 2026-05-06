@@ -3,7 +3,7 @@ services:
   - type: web
     name: project-kalam-backend
     runtime: node
-    buildCommand: npm install && npm run db:generate && npm run build --workspace=shared && npm run build --workspace=backend
+    buildCommand: npm install --include=dev && npm run db:generate && npm run build --workspace=shared && npm run build --workspace=backend
     startCommand: npm run start --workspace=backend
     healthCheckPath: /health
     envVars:
@@ -29,7 +29,7 @@ services:
   # ── Frontend Static Site ─────────────────────────────────────────────────────
   - type: static
     name: project-kalam-frontend
-    buildCommand: npm install && npm run build --workspace=shared && npm run build --workspace=frontend
+    buildCommand: npm install --include=dev && npm run build --workspace=shared && npm run build --workspace=frontend
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
