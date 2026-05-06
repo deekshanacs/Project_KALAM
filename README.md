@@ -1,101 +1,258 @@
-# TMS — Team Management System
+# TMS — Team Management System (Project KALAM)
 
-A professional, full-stack Team Management System with hierarchical teams, task management, real-time chat, AI document tools, and rich collaboration features.
+A full-stack, AI-powered Team Management System built for streamlined organizational workflows. Features hierarchical team management, task tracking, real-time chat, AI document tools, and rich collaboration — all in a unified dark-themed workspace.
+
+🌐 **Live Demo**: [project-kalam-frontend.vercel.app](https://project-kalam-frontend.vercel.app)
+
+---
+
+## Features
+
+- **Team Management** — Org hierarchy with ADMIN / TEAM_LEADER / TEAM_MEMBER / JUNIOR_MEMBER roles, workload tracking, availability status
+- **Task Management** — Create, assign, prioritize, and track tasks with comments and time logs
+- **Real-time Chat** — Direct messages and group channels powered by Socket.io, with reactions, replies, and file attachments
+- **AI Tools** — Document summarization (upload PDF/DOCX/TXT) and AI document generation, powered by Google Gemini 2.5 Flash with local NLP fallback
+- **Document Editor** — Rich text editor (TipTap) with sharing, export to DOCX, and collaborative access control
+- **Live Notifications** — Real-time in-app notifications for task assignments, messages, and document shares
+- **Video Calling** — WebRTC peer-to-peer video calls via simple-peer
+- **Dark/Light Theme** — Persistent theme toggle
+
+---
 
 ## Tech Stack
 
-| Layer | Technology |
+### Frontend
+| Technology | Version | Purpose |
+|---|---|---|
+| React | 18.3.1 | UI framework |
+| TypeScript | 5.4.5 | Type safety |
+| Vite | 5.3.5 | Build tool & dev server |
+| Tailwind CSS | 3.4.7 | Utility-first styling |
+| Framer Motion | 11.3.8 | Animations |
+| React Router DOM | 6.26.2 | Client-side routing |
+| Socket.io Client | 4.7.5 | Real-time communication |
+| Axios | 1.7.2 | HTTP client |
+| TipTap | 2.4.0 | Rich text editor |
+| Recharts | 2.12.7 | Charts and analytics |
+| @dnd-kit | 6.1.0 | Drag and drop |
+| Radix UI | various | Accessible UI primitives |
+| Lucide React | 0.414.0 | Icons |
+| simple-peer | 9.11.1 | WebRTC video calls |
+| react-hot-toast | 2.4.1 | Toast notifications |
+| DOMPurify | 3.1.6 | XSS sanitization |
+| docx | 8.5.0 | DOCX export |
+
+### Backend
+| Technology | Version | Purpose |
+|---|---|---|
+| Node.js | 20 LTS | Runtime |
+| Express | 4.19.2 | Web framework |
+| TypeScript | 5.4.5 | Type safety |
+| Prisma | 5.17.0 | ORM + migrations |
+| PostgreSQL | 15+ | Primary database |
+| Socket.io | 4.7.5 | Real-time WebSocket server |
+| jsonwebtoken | 9.0.2 | JWT auth (access 15min + refresh 7d) |
+| bcrypt | 5.1.1 | Password hashing |
+| Zod | 3.23.8 | Runtime validation |
+| Winston | 3.14.2 | Structured logging |
+| Helmet | 7.1.0 | HTTP security headers |
+| express-rate-limit | 7.4.0 | Rate limiting |
+| multer | 1.4.5 | File uploads |
+| Google Generative AI | 0.21.0 | Gemini AI integration |
+| mammoth | 1.8.0 | DOCX parsing |
+| pdf-parse | 1.1.1 | PDF parsing |
+
+### Shared
+| Technology | Purpose |
 |---|---|
-| Frontend | React 18 + TypeScript + Vite + Tailwind CSS + shadcn/ui + Framer Motion |
-| Drag & Drop | @dnd-kit/core + @dnd-kit/sortable |
-| Backend | Node.js + Express + TypeScript |
-| Database | PostgreSQL + Prisma ORM |
-| Real-time | Socket.io |
-| Auth | JWT (access 15min + refresh 7d rotation) + bcrypt |
-| AI | Anthropic Claude API (claude-sonnet-4-20250514) |
-| Charts | Recharts |
-| Rich Text | TipTap |
-| Testing | Vitest (frontend) + Jest (backend) + fast-check (PBT) |
+| TypeScript | Shared types, enums, interfaces between frontend and backend |
+
+### Testing
+| Technology | Purpose |
+|---|---|
+| Jest + ts-jest | Backend unit and integration tests |
+| Vitest | Frontend unit tests |
+| fast-check | Property-based testing |
+| supertest | API integration tests |
+| @testing-library/react | React component tests |
+
+### Infrastructure
+| Service | Purpose |
+|---|---|
+| Railway | Backend hosting + managed PostgreSQL |
+| Vercel | Frontend static hosting + CDN |
+| GitHub | Source control + CI/CD triggers |
 
 ---
 
-## Prerequisites
+## Project Structure
 
-- **Node.js** 20 LTS — [nodejs.org](https://nodejs.org)
-- **npm** 10+ (included with Node 20)
-- **PostgreSQL** 16+ — [postgresql.org](https://www.postgresql.org/download/) or via Docker
+```
+Project_KALAM/
+├── backend/                    # Node.js + Express API
+│   ├── prisma/
+│   │   ├── schema.prisma       # Database schema
+│   │   ├── seed.ts             # Seed data (10 users, tasks, messages, docs)
+│   │   └── migrations/         # Prisma migration history
+│   └── src/
+│       ├── config/env.ts       # Zod-validated environment config
+│       ├── controllers/        # Route handlers
+│       ├── middleware/         # Auth, CORS, rate limit, upload, validation
+│       ├── routes/             # Express routers
+│       ├── schemas/            # Zod validation schemas
+│       ├── services/           # Business logic (auth, tasks, AI, socket)
+│       ├── lib/                # Prisma client, logger, error classes
+│       ├── types/              # Express type augmentation
+│       └── _shared/            # Copy of shared types (build artifact)
+│
+├── frontend/                   # React 18 + Vite SPA
+│   └── src/
+│       ├── api/                # Axios API clients per domain
+│       ├── components/         # Reusable UI components
+│       │   ├── ai/             # AI tools components
+│       │   ├── auth/           # PrivateRoute
+│       │   ├── common/         # Avatar, Skeleton, Badge, etc.
+│       │   ├── documents/      # Doc editor, list, share modal
+│       │   ├── layout/         # Sidebar, Topbar, Layout, Background
+│       │   ├── tasks/          # Task card and modal
+│       │   └── team/           # Profile drawer
+│       ├── contexts/           # AuthContext, SocketContext, ThemeContext
+│       ├── hooks/              # useAuth, useSocket, usePermissions, useNotifications
+│       ├── pages/              # Team, Tasks, Chat, AITools, Documents, Login, Register
+│       ├── utils/              # Formatters, animations, org tree, workload, permissions
+│       └── config/runtime.ts   # Vite env var access
+│
+├── shared/                     # Shared TypeScript types
+│   └── src/types/index.ts      # Enums, interfaces, DTOs used by both frontend and backend
+│
+├── railway.toml                # Railway build + deploy config
+├── vercel.json                 # Vercel build config
+├── build-frontend.sh           # Frontend build script for Vercel
+├── package.json                # npm workspaces root
+└── tsconfig.base.json          # Shared TypeScript base config
+```
 
 ---
 
-## Installation
+## Database Schema
+
+| Model | Description |
+|---|---|
+| User | Team members with role, availability, supervisor hierarchy |
+| Task | Tasks with status, priority, assignee, due date, attachments |
+| Comment | Task comments with author |
+| TimeLog | Time tracking entries per task |
+| Message | Direct and group messages with reactions, replies, attachments |
+| Group | Chat groups with members |
+| GroupMember | Many-to-many user-group membership |
+| Document | Rich text documents with sharing permissions |
+| Project | Project containers for tasks |
+| RefreshToken | JWT refresh token store with rotation |
+
+---
+
+## API Endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login, returns JWT pair |
+| POST | `/api/auth/refresh` | Rotate refresh token |
+| POST | `/api/auth/logout` | Revoke refresh token |
+| GET | `/api/auth/me` | Get current user |
+| GET | `/api/users` | List all users |
+| PATCH | `/api/users/:id/status` | Update availability status |
+| PATCH | `/api/users/:id/supervisor` | Update org hierarchy |
+| GET | `/api/tasks` | List tasks (scoped by role) |
+| POST | `/api/tasks` | Create and assign task |
+| PATCH | `/api/tasks/:id/status` | Update task status |
+| DELETE | `/api/tasks/:id` | Delete task |
+| POST | `/api/tasks/:id/comments` | Add comment |
+| POST | `/api/tasks/:id/time-logs` | Log time |
+| GET | `/api/messages/direct/:userId` | Get DM history |
+| POST | `/api/messages/direct` | Send DM |
+| GET | `/api/messages/group/:groupId` | Get group messages |
+| POST | `/api/messages/group` | Send group message |
+| GET | `/api/groups` | List user's groups |
+| POST | `/api/groups` | Create group |
+| GET | `/api/documents` | List accessible documents |
+| POST | `/api/documents` | Create document |
+| PATCH | `/api/documents/:id` | Update document |
+| POST | `/api/documents/:id/share` | Share document |
+| POST | `/api/ai/summarize` | Summarize uploaded file |
+| POST | `/api/ai/create-document` | Generate document (SSE stream) |
+| POST | `/api/upload` | Upload file attachment |
+| GET | `/health` | Health check |
+
+---
+
+## Local Development
+
+### Prerequisites
+- Node.js 20 LTS
+- npm 10+
+- PostgreSQL 15+ (local or [Neon](https://neon.tech) free tier)
+
+### Setup
 
 ```bash
-git clone <repository-url>
-cd tms
+# 1. Clone
+git clone https://github.com/deekshanacs/Project_KALAM.git
+cd Project_KALAM
+
+# 2. Install all dependencies
 npm install
-```
 
-This installs all dependencies for all three workspaces (`backend`, `frontend`, `shared`) via npm workspaces.
-
----
-
-## Environment Setup
-
-```bash
-# Backend
+# 3. Configure backend
 cp backend/.env.example backend/.env
-# Edit backend/.env — fill in DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET, ANTHROPIC_API_KEY
+# Edit backend/.env — set DATABASE_URL, JWT_SECRET, JWT_REFRESH_SECRET
 
-# Frontend
-cp frontend/.env.example frontend/.env
-# Edit frontend/.env — set VITE_API_URL and VITE_SOCKET_URL
-```
+# 4. Configure frontend
+cp frontend/.env.local.example frontend/.env.local
+# Edit frontend/.env.local — set VITE_API_URL=http://localhost:4000
 
-### Required Environment Variables
-
-**Backend (`backend/.env`)**:
-| Variable | Description |
-|---|---|
-| `DATABASE_URL` | PostgreSQL connection string from Neon |
-| `JWT_SECRET` | Random 32+ char string for access token signing |
-| `JWT_REFRESH_SECRET` | Different random 32+ char string for refresh token signing |
-| `ANTHROPIC_API_KEY` | Claude API key from [console.anthropic.com](https://console.anthropic.com) |
-| `PORT` | Server port (default: 4000) |
-| `CORS_ORIGIN` | Deployed frontend URL |
-| `PUBLIC_URL` | Public backend URL used for generated links |
-| `UPLOAD_DIR` | Local uploads path (default: `./uploads`) |
-
-**Frontend (`frontend/.env`)**:
-| Variable | Description |
-|---|---|
-| `VITE_API_URL` | Backend URL on Render |
-| `VITE_SOCKET_URL` | Socket.io URL on Render |
-
----
-
-## Database Setup
-
-```bash
-# Apply the Prisma migration history to the target PostgreSQL database
+# 5. Run migrations
 npm run db:deploy
 
-# Seed development data
+# 6. Seed database
 npm run seed
 ```
 
----
-
-## Development
+### Run
 
 ```bash
-# Terminal 1: Backend (port 4000)
+# Terminal 1 — Backend (http://localhost:4000)
 npm run dev:backend
 
-# Terminal 2: Frontend (port 5173)
+# Terminal 2 — Frontend (http://localhost:5173)
 npm run dev:frontend
 ```
 
-Open the frontend URL shown by Vite in the terminal
+---
+
+## Environment Variables
+
+### Backend (`backend/.env`)
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | ✅ | PostgreSQL connection string |
+| `JWT_SECRET` | ✅ | Min 32 chars — access token signing key |
+| `JWT_REFRESH_SECRET` | ✅ | Min 32 chars — refresh token signing key |
+| `NODE_ENV` | ✅ | `development` or `production` |
+| `PORT` | — | Server port (default: `4000`) |
+| `CORS_ORIGIN` | ✅ | Frontend URL (comma-separated for multiple) |
+| `PUBLIC_URL` | ✅ | Backend public URL for file links |
+| `UPLOAD_DIR` | — | Upload path (default: `./uploads`) |
+| `GEMINI_API_KEY` | — | Google Gemini key — get free at [aistudio.google.com](https://aistudio.google.com/app/apikey) |
+| `ANTHROPIC_API_KEY` | — | Anthropic Claude key (optional) |
+
+### Frontend (`frontend/.env.production`)
+
+| Variable | Required | Description |
+|---|---|---|
+| `VITE_API_URL` | ✅ | Backend URL |
+| `VITE_SOCKET_URL` | ✅ | Socket.io URL (same as API URL) |
 
 ---
 
@@ -103,97 +260,72 @@ Open the frontend URL shown by Vite in the terminal
 
 All seed users share the password: **`Password123!`**
 
-| Email | Name | Role |
+| Email | Role | Can Do |
 |---|---|---|
-| alice@tms.dev | Alice Admin | ADMIN |
-| bob@tms.dev | Bob Leader | TEAM_LEADER |
-| carol@tms.dev | Carol Leader | TEAM_LEADER |
-| dave@tms.dev | Dave Member | TEAM_MEMBER |
-| eve@tms.dev | Eve Member | TEAM_MEMBER |
-| frank@tms.dev | Frank Member | TEAM_MEMBER |
-| grace@tms.dev | Grace Junior | JUNIOR_MEMBER |
-| henry@tms.dev | Henry Junior | JUNIOR_MEMBER |
-| iris@tms.dev | Iris Junior | JUNIOR_MEMBER |
-| jack@tms.dev | Jack Junior | JUNIOR_MEMBER |
+| `alice@tms.dev` | ADMIN | Everything — full system access |
+| `bob@tms.dev` | TEAM_LEADER | Manage own subtree, assign tasks |
+| `carol@tms.dev` | TEAM_LEADER | Manage own subtree, assign tasks |
+| `dave@tms.dev` | TEAM_MEMBER | Assign to juniors, update own tasks |
+| `eve@tms.dev` | TEAM_MEMBER | Assign to juniors, update own tasks |
+| `frank@tms.dev` | TEAM_MEMBER | Assign to juniors, update own tasks |
+| `grace@tms.dev` | JUNIOR_MEMBER | Update own tasks only |
+| `henry@tms.dev` | JUNIOR_MEMBER | Update own tasks only |
+| `iris@tms.dev` | JUNIOR_MEMBER | Update own tasks only |
+| `jack@tms.dev` | JUNIOR_MEMBER | Update own tasks only |
 
 ---
 
-## Build
+## Deployment
 
-```bash
-npm run build --workspaces
-```
+### Backend → Railway
 
-Output:
-- `backend/dist/` — compiled Node.js server
-- `frontend/dist/` — Vite production bundle
+1. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
+2. Add **PostgreSQL** plugin — `DATABASE_URL` is injected automatically
+3. Set environment variables (see table above)
+4. Railway uses `railway.toml` — build and start are configured automatically
+
+### Frontend → Vercel
+
+1. Go to [vercel.com](https://vercel.com) → New Project → Import from GitHub
+2. Set environment variables: `VITE_API_URL` and `VITE_SOCKET_URL`
+3. Vercel uses `vercel.json` and `build-frontend.sh` — no manual config needed
+
+### After deploying both:
+- Update `CORS_ORIGIN` on Railway to your Vercel URL
+- Update `PUBLIC_URL` on Railway to your Railway URL
 
 ---
 
 ## Tests
 
 ```bash
-# All tests
+# Run all tests
 npm run test --workspaces
 
-# Backend only
+# Backend tests only
 npm run test --workspace=backend
 
-# Frontend only
+# Frontend tests only
 npm run test --workspace=frontend
 
-# With coverage
+# Coverage
 npm run test:coverage --workspace=backend
-npm run test:coverage --workspace=frontend
 ```
-
-Tests include:
-- **Unit tests**: Jest (backend) + Vitest (frontend)
-- **Property-based tests**: fast-check for business logic invariants
-- **Integration tests**: supertest for API endpoint flows
 
 ---
 
-## AI Integration
+## Security
 
-Both AI features use **Google Gemini 2.5 Flash**:
-- **Document Summarizer** — upload PDF/DOCX/TXT → Gemini analyzes and returns summary, key points, and analysis
-- **Document Creator** — describe what you need → Gemini generates a full structured document, streamed progressively
-
-Set `GEMINI_API_KEY` in your backend environment variables. Get a free key at [aistudio.google.com](https://aistudio.google.com/app/apikey).
-
-If no key is set, both features fall back to the built-in local NLP engine.
-
----
-
-## Deployment
-
-### Frontend → Render Static Site
-1. Connect the repository as a Render static site
-2. Set build command: `npm install && npm run build --workspace=shared && npm run build --workspace=frontend`
-3. Set publish directory: `frontend/dist`
-4. Set `VITE_API_URL` and `VITE_SOCKET_URL` to the backend Render URL
-
-### Backend → Render Web Service
-1. Connect the repository as a Render web service
-2. Set build command: `npm install && npm run build --workspace=shared && npm run build --workspace=backend`
-3. Set start command: `npm run start --workspace=backend`
-4. Add the Neon PostgreSQL database and set the backend environment variables
+- JWT access tokens expire in **15 minutes**, refresh tokens in **7 days** with rotation
+- Passwords hashed with **bcrypt** (cost factor 12)
+- All inputs validated with **Zod** schemas
+- HTTP headers secured with **Helmet**
+- Rate limiting: 10 req/15min on auth routes, 100 req/min globally
+- CORS restricted to configured origins only
+- File uploads restricted to allowed MIME types, max 10MB
 
 ---
 
-## Project Structure
+## License
 
-```
-tms/
-├── backend/          # Node.js + Express + TypeScript API
-│   ├── prisma/       # Schema + seed
-│   └── src/          # Routes, controllers, services, middleware
-├── frontend/         # React 18 + Vite + TypeScript SPA
-│   └── src/          # Pages, components, hooks, contexts, API
-├── shared/           # Shared TypeScript interfaces and enums
-│   └── src/types/    # Single barrel export
-├── aidlc-docs/       # AI-DLC documentation (design artifacts)
-├── package.json      # npm workspaces root
-└── README.md
-```
+MIT
