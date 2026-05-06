@@ -25,9 +25,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "paths": {
-      "@tms/shared": ["./_shared/index.ts"]
-    }
+
   },
   "include": ["src/**/*"],
   "exclude": [
