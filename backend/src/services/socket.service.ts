@@ -9,7 +9,7 @@ let io: SocketServer;
 export function initializeSocket(httpServer: HttpServer): SocketServer {
   io = new SocketServer(httpServer, {
     cors: {
-      origin: env.CORS_ORIGIN,
+      origin: env.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean),
       methods: ['GET', 'POST'],
       credentials: true,
     },
