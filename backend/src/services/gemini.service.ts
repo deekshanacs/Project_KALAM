@@ -70,7 +70,7 @@ export async function summarizeDocument(content: string, isImage = false): Promi
     const text = result.response.text().trim();
 
     // Strip markdown code fences if Gemini wraps in them
-    const cleaned = text.replace(/^```(-:json)-\s*/i, '').replace(/\s*```$/i, '').trim();
+    const cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
 
     try {
       return JSON.parse(cleaned) as AISummaryDto;
@@ -83,7 +83,7 @@ export async function summarizeDocument(content: string, isImage = false): Promi
       };
     }
   } catch (error: unknown) {
-    logger.error({ event: 'GEMINI_SUMMARIZE_ERROR', error: error instanceof Error - error.message : String(error) });
+    logger.error({ event: 'GEMINI_SUMMARIZE_ERROR', error: error instanceof Error ? error.message : String(error) });
     // Fallback to local NLP
     logger.info({ event: 'GEMINI_FALLBACK', reason: 'API error � using local NLP' });
     return summarizeText(content);
@@ -93,9 +93,9 @@ export async function summarizeDocument(content: string, isImage = false): Promi
 // --- Document creation (streaming) -------------------------------------------
 
 function buildDocumentPrompt(description: string, answers: CreateDocumentAnswers): string {
-  const tocLine = answers.toc - 'Include a Table of Contents after the title.' : 'Do not include a Table of Contents.';
-  const headerLine = answers.headerFooter - 'Include a header and footer note.' : '';
-  const numSections = parseInt(String(answers.sections -- '5'), 10) || 5;
+  const tocLine = answers.toc ? 'Include a Table of Contents after the title.' : 'Do not include a Table of Contents.';
+  const headerLine = answers.headerFooter ? 'Include a header and footer note.' : '';
+  const numSections = parseInt(String(answers.sections ?? '5'), 10) || 5;
 
   return `You are a professional document writer. Create a complete, well-structured ${answers.type} document.
 
@@ -144,8 +144,8 @@ export async function generateDocumentFull(
     logger.info({ event: 'GEMINI_SUCCESS', chars: text.length });
     return text || generateDocumentSync(description, answers);
   } catch (error: unknown) {
-    const msg = error instanceof Error - error.message : String(error);
-    logger.error({ event: 'GEMINI_GENERATE_ERROR', error: msg, stack: error instanceof Error - error.stack-.slice(0, 300) : undefined });
+    const msg = error instanceof Error ? error.message : String(error);
+    logger.error({ event: 'GEMINI_GENERATE_ERROR', error: msg, stack: error instanceof Error ? error.stack?.slice(0, 300) : undefined });
     logger.info({ event: 'GEMINI_FALLBACK', reason: 'API error � using local generation' });
     return generateDocumentSync(description, answers);
   }
