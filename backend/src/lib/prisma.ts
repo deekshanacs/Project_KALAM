@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-// Singleton pattern — prevents multiple Prisma client instances in development
+// Singleton — prevents multiple Prisma instances in dev hot-reload
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 export const prisma: PrismaClient =

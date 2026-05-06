@@ -10,13 +10,14 @@
   "scripts": {
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",
-    "build": "npm run build --workspaces --if-present",
-    "type-check": "npm run type-check --workspaces --if-present",
+    "build": "npm run build --workspace=shared && npm run build --workspace=backend && npm run build --workspace=frontend",
+    "type-check": "npm run type-check --workspace=shared && npm run type-check --workspace=backend && npm run type-check --workspace=frontend",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "seed": "npm run seed --workspace=backend",
     "db:migrate": "npm run db:migrate --workspace=backend",
-    "db:generate": "npm run db:generate --workspace=backend"
+    "db:generate": "npm run db:generate --workspace=backend",
+    "db:deploy": "npm run db:deploy --workspace=backend"
   },
   "engines": {
     "node": ">=20.0.0",

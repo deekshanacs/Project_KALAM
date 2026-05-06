@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { getAccessToken } from '../api/client';
+import { SOCKET_URL } from '../config/runtime';
 import { useAuth } from '../hooks/useAuth';
 
 interface SocketContextValue {
@@ -29,7 +30,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     const token = getAccessToken();
     if (!token) return;
 
-    const socket = io(import.meta.env['VITE_SOCKET_URL'] as string ?? '', {
+    const socket = io(SOCKET_URL, {
       auth: { token },
       transports: ['websocket', 'polling'],
       path: '/socket.io',

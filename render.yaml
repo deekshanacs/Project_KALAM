@@ -1,0 +1,37 @@
+services:
+  # ── Backend Web Service ──────────────────────────────────────────────────────
+  - type: web
+    name: project-kalam-backend
+    runtime: node
+    buildCommand: npm install && npm run build --workspace=shared && npm run build --workspace=backend
+    startCommand: npm run start --workspace=backend
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://project-kalam-frontend.onrender.com
+      - key: PUBLIC_URL
+        value: https://project-kalam-backend.onrender.com
+      - key: UPLOAD_DIR
+        value: ./uploads
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        value: ""
+
+  # ── Frontend Static Site ─────────────────────────────────────────────────────
+  - type: static
+    name: project-kalam-frontend
+    buildCommand: npm install && npm run build --workspace=shared && npm run build --workspace=frontend
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://project-kalam-backend.onrender.com
+      - key: VITE_SOCKET_URL
+        value: https://project-kalam-backend.onrender.com

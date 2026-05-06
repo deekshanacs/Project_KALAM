@@ -1,4 +1,7 @@
 import axios, { type AxiosInstance, type InternalAxiosRequestConfig, type AxiosResponse } from 'axios';
+import { buildApiUrl, API_BASE_URL } from '../config/runtime';
+
+export { buildApiUrl } from '../config/runtime';
 
 let accessToken: string | null = null;
 let refreshPromise: Promise<string> | null = null;
@@ -11,12 +14,8 @@ export function getAccessToken(): string | null {
   return accessToken;
 }
 
-// Production: VITE_API_URL = https://project-kalam-backend.onrender.com
-// Dev: leave VITE_API_URL empty — Vite dev proxy handles /api/* routes
-const API_BASE = (import.meta.env['VITE_API_URL'] as string | undefined) ?? '';
-
 export const apiClient: AxiosInstance = axios.create({
-  baseURL: API_BASE,
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
   withCredentials: true,
 });
@@ -48,10 +47,7 @@ apiClient.interceptors.response.use(
           if (!storedRefreshToken) throw new Error('No refresh token');
 
           refreshPromise = axios
-            .post<{ data: { accessToken: string; refreshToken: string } }>(
-              `${API_BASE}/api/auth/refresh`,
-              { refreshToken: storedRefreshToken }
-            )
+            .post<{ data: { accessToken: string; refreshToken: string } }>(buildApiUrl('/api/auth/refresh'), { refreshToken: storedRefreshToken })
             .then((res) => {
               const { accessToken: newAccess, refreshToken: newRefresh } = res.data.data;
               setAccessToken(newAccess);

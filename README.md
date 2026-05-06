@@ -56,37 +56,28 @@ cp frontend/.env.example frontend/.env
 **Backend (`backend/.env`)**:
 | Variable | Description |
 |---|---|
-| `DATABASE_URL` | PostgreSQL connection string, e.g. `postgresql://postgres:password@localhost:5432/tms_dev` |
+| `DATABASE_URL` | PostgreSQL connection string from Neon |
 | `JWT_SECRET` | Random 32+ char string for access token signing |
 | `JWT_REFRESH_SECRET` | Different random 32+ char string for refresh token signing |
 | `ANTHROPIC_API_KEY` | Claude API key from [console.anthropic.com](https://console.anthropic.com) |
 | `PORT` | Server port (default: 4000) |
-| `CORS_ORIGIN` | Frontend URL (default: `http://localhost:5173`) |
+| `CORS_ORIGIN` | Deployed frontend URL |
+| `PUBLIC_URL` | Public backend URL used for generated links |
 | `UPLOAD_DIR` | Local uploads path (default: `./uploads`) |
 
 **Frontend (`frontend/.env`)**:
 | Variable | Description |
 |---|---|
-| `VITE_API_URL` | Backend URL (default: `http://localhost:4000`) |
-| `VITE_SOCKET_URL` | Socket.io URL (same as API URL) |
+| `VITE_API_URL` | Backend URL on Render |
+| `VITE_SOCKET_URL` | Socket.io URL on Render |
 
 ---
 
 ## Database Setup
 
 ```bash
-# Option 1: Docker
-docker run -d --name tms-postgres \
-  -e POSTGRES_DB=tms_dev \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_PASSWORD=postgres \
-  -p 5432:5432 postgres:16
-
-# Option 2: Local PostgreSQL
-createdb tms_dev
-
-# Run migrations
-npm run db:migrate
+# Apply the Prisma migration history to the target PostgreSQL database
+npm run db:deploy
 
 # Seed development data
 npm run seed
@@ -104,7 +95,7 @@ npm run dev:backend
 npm run dev:frontend
 ```
 
-Open [http://localhost:5173](http://localhost:5173)
+Open the frontend URL shown by Vite in the terminal
 
 ---
 
@@ -177,17 +168,17 @@ If no key is set, both features fall back to the built-in local NLP engine.
 
 ## Deployment
 
-### Frontend → Vercel
-1. Connect repository to Vercel
-2. Set build command: `npm run build --workspace=frontend`
-3. Set output directory: `frontend/dist`
-4. Add environment variables: `VITE_API_URL`, `VITE_SOCKET_URL`
+### Frontend → Render Static Site
+1. Connect the repository as a Render static site
+2. Set build command: `npm install && npm run build --workspace=shared && npm run build --workspace=frontend`
+3. Set publish directory: `frontend/dist`
+4. Set `VITE_API_URL` and `VITE_SOCKET_URL` to the backend Render URL
 
-### Backend → Railway or Render
-1. Connect repository
-2. Set start command: `npm run build --workspace=backend && npx prisma migrate deploy && node backend/dist/index.js`
-3. Add PostgreSQL add-on
-4. Set all backend environment variables
+### Backend → Render Web Service
+1. Connect the repository as a Render web service
+2. Set build command: `npm install && npm run build --workspace=shared && npm run build --workspace=backend`
+3. Set start command: `npm run start --workspace=backend`
+4. Add the Neon PostgreSQL database and set the backend environment variables
 
 ---
 

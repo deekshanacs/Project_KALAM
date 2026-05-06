@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { SetupQuestions } from './SetupQuestions';
 import { DocumentPreview } from './DocumentPreview';
-import { getAccessToken } from '../../api/client';
+import { buildApiUrl, getAccessToken } from '../../api/client';
 import type { CreateDocumentAnswers } from '@tms/shared';
 import toast from 'react-hot-toast';
 
@@ -24,9 +24,7 @@ export function DocCreator() {
 
     try {
       const token = getAccessToken();
-      // Use VITE_API_URL in prod; empty string lets Vite proxy handle it in dev
-      const apiBase = (import.meta.env['VITE_API_URL'] as string | undefined) ?? '';
-      const res = await fetch(`${apiBase}/api/ai/create-document`, {
+      const res = await fetch(buildApiUrl('/api/ai/create-document'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?? ''}` },
         body: JSON.stringify({ description, answers: ans }),

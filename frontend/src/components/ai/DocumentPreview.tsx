@@ -1,6 +1,6 @@
 import { marked } from 'marked';
 import { Download } from 'lucide-react';
-import { getAccessToken } from '../../api/client';
+import { buildApiUrl, getAccessToken } from '../../api/client';
 import type { CreateDocumentAnswers } from '@tms/shared';
 import toast from 'react-hot-toast';
 
@@ -18,8 +18,7 @@ export function DocumentPreview({ content, isStreaming, isDone, answers }: Docum
     if (!content || !answers) return;
     try {
       const token = getAccessToken();
-      const apiBase = (import.meta.env['VITE_API_URL'] as string | undefined) ?? '';
-      const res = await fetch(`${apiBase}/api/ai/generate-docx`, {
+      const res = await fetch(buildApiUrl('/api/ai/generate-docx'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token ?? ''}` },
         body: JSON.stringify({ content, options: { font: answers.font, fontSize: Number(answers.fontSize), pageSize: answers.pageSize } }),
