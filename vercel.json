@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "npm run build --workspace=shared && npm run build --workspace=frontend",
-  "outputDirectory": "frontend/dist",
-  "installCommand": "npm install",
   "framework": null,
+  "installCommand": "npm install",
+  "buildCommand": "bash build-frontend.sh",
+  "outputDirectory": "frontend/dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
