@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "node -e \"const fs=require('fs');fs.mkdirSync('src/_shared',{recursive:true});fs.copyFileSync('../shared/src/types/index.ts','src/_shared/index.ts')\" && tsc",
     "start": "npx prisma migrate deploy && node dist/index.js",
     "start:dev": "node dist/index.js",
     "type-check": "tsc --noEmit",

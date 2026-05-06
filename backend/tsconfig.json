@@ -25,7 +25,7 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "paths": {
-      "@tms/shared": ["../shared/src/types/index.ts"]
+      "@tms/shared": ["./_shared/index.ts"]
     }
   },
   "include": [
