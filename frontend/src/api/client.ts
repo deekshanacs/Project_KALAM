@@ -11,8 +11,8 @@ export function getAccessToken(): string | null {
   return accessToken;
 }
 
-// In production: VITE_API_URL = https://project-kalam-backend.onrender.com
-// In dev: VITE_API_URL is empty → Vite proxy handles /api/* → localhost:4000
+// Production: VITE_API_URL = https://project-kalam-backend.onrender.com
+// Dev: leave VITE_API_URL empty — Vite dev proxy handles /api/* routes
 const API_BASE = (import.meta.env['VITE_API_URL'] as string | undefined) ?? '';
 
 export const apiClient: AxiosInstance = axios.create({

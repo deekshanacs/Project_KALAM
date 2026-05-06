@@ -8,8 +8,8 @@ const router = Router();
 
 const uploadFile: RequestHandler = (req, res) => {
   if (!req.file) { res.status(400).json({ error: 'No file uploaded' }); return; }
-  // Use PUBLIC_URL in production, fallback to local for dev
-  const baseUrl = env.PUBLIC_URL || `http://localhost:${env.PORT}`;
+  // PUBLIC_URL must be set in production (e.g. https://project-kalam-backend.onrender.com)
+  const baseUrl = env.PUBLIC_URL;
   const url = `${baseUrl}/uploads/${path.basename(req.file.path)}`;
   res.json({ data: { url } });
 };

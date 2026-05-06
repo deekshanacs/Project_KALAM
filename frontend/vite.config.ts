@@ -18,18 +18,20 @@ export default defineConfig(({ mode }) => ({
       '@tiptap/extension-placeholder',
     ],
   },
-  // Proxy only in local development — never in production build
-  server: mode === 'development' ? {
-    port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-      },
-      '/uploads': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
+  // Dev proxy: only active during `vite dev`, never in production build
+  ...(mode === 'development' && {
+    server: {
+      port: 5173,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:4000',
+          changeOrigin: true,
+        },
+        '/uploads': {
+          target: 'http://localhost:4000',
+          changeOrigin: true,
+        },
       },
     },
-  } : undefined,
+  }),
 }));

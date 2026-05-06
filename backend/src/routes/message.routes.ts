@@ -223,7 +223,7 @@ const reactToMessage: RequestHandler = async (req, res, next) => {
 // ─── POST /messages/upload ────────────────────────────────────────────────────
 const uploadChatFile: RequestHandler = (req, res, _next) => {
   if (!req.file) { res.status(400).json({ error: 'No file' }); return; }
-  const baseUrl = env.PUBLIC_URL || `http://localhost:${env.PORT}`;
+  const baseUrl = env.PUBLIC_URL;
   const url = `${baseUrl}/uploads/${path.basename(req.file.path)}`;
   const isImage = req.file.mimetype.startsWith('image/');
   res.json({ data: { url, type: isImage ? 'IMAGE' : 'FILE', name: req.file.originalname } });

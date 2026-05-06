@@ -6,12 +6,12 @@ const envSchema = z.object({
   JWT_REFRESH_SECRET: z.string().min(32, 'JWT_REFRESH_SECRET must be at least 32 characters'),
   PORT: z.coerce.number().int().positive().default(4000),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  CORS_ORIGIN: z.string().min(1).default('http://localhost:5173'),
+  CORS_ORIGIN: z.string().min(1).default('https://project-kalam-frontend.onrender.com'),
   UPLOAD_DIR: z.string().min(1).default('./uploads'),
   ANTHROPIC_API_KEY: z.string().default(''),
   GEMINI_API_KEY: z.string().default(''),
-  // Public URL for file serving (used in upload responses)
-  PUBLIC_URL: z.string().default(''),
+  // Public URL for file serving (your Render backend URL)
+  PUBLIC_URL: z.string().default('https://project-kalam-backend.onrender.com'),
 });
 
 function validateEnv(): z.infer<typeof envSchema> {
